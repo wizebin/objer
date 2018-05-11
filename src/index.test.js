@@ -28,11 +28,16 @@ describe('object', () => {
     })
   });
   describe('has', () => {
-    it('says whether or not the object has a subkey', () => {
+    it('says whether or not the object has a complex subkey', () => {
       const tempObject = { first: 'yes', second: 'yes' };
       expect(has(tempObject, 'first')).to.equal(true);
       expect(has(tempObject, 'ninteyninth')).to.equal(false);
       expect(has(tempObject, null)).to.equal(false);
+    })
+    it('says whether or not the object has a subkey', () => {
+      const tempObject = { third: { a: { b: { c: 999 } } }};
+      expect(has(tempObject, 'third.a.b.c')).to.equal(true);
+      expect(has(tempObject, 'third.a.b.qppqq')).to.equal(false);
     })
   });
   describe('getStringPathForArray', () => {

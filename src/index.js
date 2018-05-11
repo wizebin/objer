@@ -5,10 +5,6 @@ export function set(object, path, value) {
   for (let keydex = 0; keydex < keys.length; keydex += 1) {
     let key = keys[keydex];
     if (key !== '') {
-      if (key[key.length - 1] === ']') {
-        key = key.substr(0, key.length - 1);
-        key = parseInt(key, 10);
-      }
       if (keydex !== keys.length - 1) {
         if (typeof subObject[key] !== 'object') {
           subObject[key] = {};
@@ -24,6 +20,18 @@ export function set(object, path, value) {
 }
 
 export function has(object, key) {
+  let subObject = object;
+  const keys = getObjectPath(key || '');
+  for (let keydex = 0; keydex < keys.length; keydex += 1) {
+    let key = keys[keydex];
+    if (!hasRoot(subObject, key)) return false;
+    subObject = subObject[key];
+  }
+
+  return true;
+}
+
+export function hasRoot(object, key) {
   if (typeof object === 'object') {
     return (object.hasOwnProperty(key));
   }
@@ -36,12 +44,7 @@ export function get(object, path, defaultValue = undefined) {
   for (let keydex = 0; keydex < keys.length; keydex += 1) {
     let key = keys[keydex];
     if (key !== '') {
-      if (key[key.length - 1] === ']') {
-        key = key.substr(0, key.length - 1);
-        key = parseInt(key, 10);
-      }
-
-      if (!has(subObject, key)) return defaultValue;
+      if (!hasRoot(subObject, key)) return defaultValue;
 
       subObject = subObject[key];
     }
@@ -62,8 +65,9 @@ export function setKey(object, path, key, value) {
 export function setWithSubkey(object, path, subkey, value) {
   let subObject = object;
   const keys = getObjectPath(path);
-  keys.forEach((key, dex, ray) => {
-    if (key !== '' && dex !== ray.length - 1) {
+  for (let dex = 0; dex < keys.length; dex += 1) {
+    const key = keys[key];
+    if (key !== '' && dex !== keys.length - 1) {
       if (subObject[subkey] === undefined) {
         subObject[subkey] = { [key]: {  } };
       }
@@ -74,7 +78,7 @@ export function setWithSubkey(object, path, subkey, value) {
       }
       subObject[subkey][key] = value;
     }
-  });
+  }
 
   return object;
 }
@@ -142,7 +146,7 @@ export function assurePathExists(object, path, defaultValue = {}) {
   let currentObject = object;
   for (let arraydex = 0; arraydex < arrayPath.length; arraydex += 1) {
     const key = arrayPath[arraydex];
-    if (!has(currentObject, key)) { // TODO: Address problems where key exists already and is not an array or object
+    if (!hasRoot(currentObject, key)) { // TODO: Address problems where key exists already and is not an array or object
       const nextKey = ((arraydex === arrayPath.length - 1) ? null : arrayPath[arraydex + 1]);
       if (nextKey === null) {
         currentObject[key] = defaultValue;
