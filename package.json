@@ -1,5 +1,5 @@
 {
-  "name": "objex",
+  "name": "objer",
   "version": "1.0.0",
   "description": "Nexusoft object library",
   "main": "./dist/src/index.js",
@@ -11,6 +11,7 @@
   "keywords": [
     "nexuscript",
     "object",
+    "objer",
     "get",
     "has",
     "set"
@@ -19,7 +20,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wizebin/objex.git"
+    "url": "git+https://github.com/wizebin/objer.git"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
