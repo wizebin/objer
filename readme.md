@@ -4,7 +4,11 @@ This package is used to interact with objects
 
 ## Basic Usage
 
-npm install --save wizebin/objex
+*install*
+
+`npm install --save wizebin/objex`
+
+*import*
 
 `import { get, set, has } from 'objex';`
 
@@ -25,16 +29,16 @@ The value at that key
 
 *example:*
 
-const person = {
-    name: 'jeffery',
-    address: {
-        street: '123 fake st',
-        city: 'faketown',
-        state: 'FS',
-        zip: '90909',
-    }
-};
+    const person = {
+        name: 'jeffery',
+        address: {
+            street: '123 fake st',
+            city: 'faketown',
+            state: 'FS',
+            zip: '90909',
+        }
+    };
 
-get(person, 'address.city') // returns 'faketown'
-get(person, 'key.that.doesnot.exist') // returns undefined
-get(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
+    get(person, 'address.city') // returns 'faketown'
+    get(person, 'key.that.doesnot.exist') // returns undefined
+    get(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
