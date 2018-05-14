@@ -19,6 +19,20 @@ export function set(object, path, value) {
   return object;
 }
 
+export function keys(object) {
+  if (!object) return [];
+  if (typeof Object.keys === 'undefined') return Object.keys(object);
+  const keys = [];
+
+  for(let key in object) {
+    if (object.hasOwnProperty(key)) {
+      keys.push(key);
+    }
+  }
+
+  return keys;
+}
+
 export function has(object, key) {
   let subObject = object;
   const keys = getObjectPath(key || '');
