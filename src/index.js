@@ -46,7 +46,7 @@ export function has(object, key) {
 }
 
 export function hasRoot(object, key) {
-  if (typeof object === 'object') {
+  if (object !== null && typeof object === 'object') {
     return (object.hasOwnProperty(key));
   }
   return false;
