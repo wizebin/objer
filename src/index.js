@@ -6,7 +6,7 @@ export function set(object, path, value) {
     let key = keys[keydex];
     if (key !== '') {
       if (keydex !== keys.length - 1) {
-        if (typeof subObject[key] !== 'object') {
+        if (subObject[key] === null || typeof subObject[key] !== 'object') {
           subObject[key] = {};
         }
         subObject = subObject[key];
