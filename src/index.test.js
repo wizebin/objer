@@ -39,6 +39,25 @@ describe('object', () => {
       expect(has(tempObject, 'third.a.b.c')).to.equal(true);
       expect(has(tempObject, 'third.a.b.qppqq')).to.equal(false);
     })
+    it('simply returns false on bad input', () => {
+      expect(has(null, 'a.b.c')).to.equal(false);
+      expect(has(undefined, 'a.b.c')).to.equal(false);
+      expect(has(0, 'a.b.c')).to.equal(false);
+      expect(has(NaN, 'a.b.c')).to.equal(false);
+      expect(has([], 'a.b.c')).to.equal(false);
+      expect(has({}, 'a.b.c')).to.equal(false);
+      expect(has(new Date(), 'a.b.c')).to.equal(false);
+    });
+    it('determines class instance values as well', () => {
+      class temp {
+        constructor(value) {
+          this.value = value;
+        }
+      };
+      const instance = new temp('hello world');
+      expect(has(instance, 'value')).to.equal(true);
+      expect(has(instance, ['value'])).to.equal(true);
+    });
   });
   describe('getStringPathForArray', () => {
     it('is the opposite of getObjectPath', () => {
