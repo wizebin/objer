@@ -1,5 +1,5 @@
-import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString } from './index';
 import { expect } from 'chai';
+import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -61,8 +61,18 @@ describe('object', () => {
   });
   describe('getStringPathForArray', () => {
     it('is the opposite of getObjectPath', () => {
-      const original = 'a.b.c[1][2][3].four[5]';
-      expect(getStringPathForArray(getObjectPath(original))).equal(original);
+      const originals = ['a.b.c[1][2][3].four[5]', 'a', '1', '[1]', ''];
+      originals.forEach(original => {
+        expect(getStringPathForArray(getObjectPath(original))).equal(original);
+      })
+    });
+    it('handles edge cases', () => {
+      expect(getStringPathForArray(1)).equal('[1]');
+      expect(getStringPathForArray(null)).equal('');
+    });
+    it('handles documentation cases', () => {
+      expect(getStringPathForArray(['a', 'b', 'c'])).equal('a.b.c');
+      expect(getStringPathForArray(['a', 1, 'c'])).equal('a[1].c');
     });
   });
   describe('assurePathExists', () => {

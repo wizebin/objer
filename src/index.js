@@ -67,47 +67,13 @@ export function get(object, path, defaultValue = undefined) {
   return subObject;
 }
 
-export function setKey(object, path, key, value) {
-  if (path === null || path === undefined || path === '') {
-    path = key;
-  } else {
-    path += `.${key}`;
-  }
-  return set(object, path, value);
-}
-
-export function setWithSubkey(object, path, subkey, value) {
-  let subObject = object;
-  const keys = getObjectPath(path);
-  for (let dex = 0; dex < keys.length; dex += 1) {
-    const key = keys[key];
-    if (key !== '' && dex !== keys.length - 1) {
-      if (subObject[subkey] === undefined) {
-        subObject[subkey] = { [key]: {  } };
-      }
-      subObject = subObject[subkey][key];
-    } else {
-      if (subObject[subkey] === undefined) {
-        subObject[subkey] = { [key]: {  } };
-      }
-      subObject[subkey][key] = value;
-    }
-  }
-
-  return object;
-}
-
-export function setKeyWithSubkey(object, path, subkey, key, value) {
-  if (path === null || path === undefined || path === '') {
-    path = key;
-  } else {
-    path += `.${key}`;
-  }
-  return setWithSubkey(object, path, subkey, value);
-}
-
 export function getObjectPath(path) {
-  if (path instanceof Array) return path;
+  const inputType = getTypeString(path);
+  if (inputType === 'array') return path;
+  if (inputType !== 'string') {
+    if (inputType === 'number') return [path];
+    return [];
+  }
   let inBrackets = false;
   let partBegin = 0;
   let split = false;
@@ -147,8 +113,15 @@ export function getObjectPath(path) {
 }
 
 export function getStringPathForArray(arrayPath) {
+  const inputType = getTypeString(arrayPath);
+  if (inputType !== 'array') {
+    if (inputType === 'string') return arrayPath;
+    if (inputType === 'number') return `[${arrayPath}]`;
+    return '';
+  }
+
   return arrayPath.reduce((result, item, dex) => {
-    if (toString.call(item) === '[object Number]') {
+    if (getTypeString(item) === 'number') {
       return `${result}[${item}]`;
     }
     return result + (dex > 0 ? '.': '') + item;
@@ -164,7 +137,7 @@ export function assurePathExists(object, path, defaultValue = {}) {
       const nextKey = ((arraydex === arrayPath.length - 1) ? null : arrayPath[arraydex + 1]);
       if (nextKey === null) {
         currentObject[key] = defaultValue;
-      } else if (toString.call(nextKey) === '[object Number]') {
+      } else if (getTypeString(nextKey) === 'number') {
         currentObject[key] = [];
       } else {
         currentObject[key] = {};
@@ -190,3 +163,15 @@ export function getTypeString(data) {
 
   return typeof data;
 }
+
+export default {
+  assurePathExists,
+  get,
+  getObjectPath,
+  getStringPathForArray,
+  getTypeString,
+  has,
+  hasRoot,
+  keys,
+  set,
+};
