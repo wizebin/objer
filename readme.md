@@ -6,11 +6,11 @@ This package is used to interact with objects
 
 *install*
 
-`npm install --save wizebin/objex`
+`npm install --save objer`
 
 *import*
 
-`import { get, set, has } from 'objex';`
+`import { get, set, has } from 'objer';`
 
 ## Api Reference
 
