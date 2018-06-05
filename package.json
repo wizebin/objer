@@ -1,7 +1,7 @@
 {
   "name": "objer",
   "version": "1.0.22",
-  "description": "Nexusoft object library",
+  "description": "Wizebin's object library",
   "main": "./dist/src/index.js",
   "typings": "./src/index.d.ts",
   "scripts": {
@@ -10,7 +10,8 @@
     "build": "webpack --mode production"
   },
   "keywords": [
-    "nexuscript",
+    "nexusoft",
+    "wizebin",
     "object",
     "objer",
     "get",
