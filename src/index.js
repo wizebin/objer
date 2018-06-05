@@ -1,4 +1,14 @@
-/* eslint no-prototype-builtins: "off" */
+/**
+ * Objer module, interact with objects
+ * @module objer
+ */
+
+/**
+ * Set value at an object subpath
+ * @param {Object} object
+ * @param {string|array} path
+ * @param {*} value
+ */
 export function set(object, path, value) {
   let subObject = object;
   const keys = getObjectPath(path || '');
@@ -19,6 +29,10 @@ export function set(object, path, value) {
   return object;
 }
 
+/**
+ * Get array of keys in an object
+ * @param {Object} object
+ */
 export function keys(object) {
   if (!object) return [];
   if (typeof Object.keys === 'undefined') return Object.keys(object);
@@ -33,6 +47,11 @@ export function keys(object) {
   return keys;
 }
 
+/**
+ * Check if an object has a value at a path
+ * @param {Object} object
+ * @param {string|array} key
+ */
 export function has(object, key) {
   let subObject = object;
   const keys = getObjectPath(key || '');
@@ -45,6 +64,11 @@ export function has(object, key) {
   return true;
 }
 
+/**
+ * Check if an object has a top level key, hasRoot({ a: 1 }, 'a'); is true, hasRoot({ a: { b: 1 } }, 'a.b'); is false
+ * @param {Object} object
+ * @param {string} key
+ */
 export function hasRoot(object, key) {
   if (object !== null && typeof object === 'object') {
     return (key in object);
@@ -52,6 +76,12 @@ export function hasRoot(object, key) {
   return false;
 }
 
+/**
+ * Retrieve value from within an object or array
+ * @param {Object} object
+ * @param {string|array} path
+ * @param {*} [defaultValue]
+ */
 export function get(object, path, defaultValue = undefined) {
   let subObject = object;
   const keys = getObjectPath(path || '');
@@ -67,6 +97,10 @@ export function get(object, path, defaultValue = undefined) {
   return subObject;
 }
 
+/**
+ * Resolve a path to a path array 'a.b.c' returns ['a', 'b', 'c']
+ * @param {string|array} path
+ */
 export function getObjectPath(path) {
   const inputType = getTypeString(path);
   if (inputType === 'array') return path;
@@ -112,6 +146,10 @@ export function getObjectPath(path) {
   return parts;
 }
 
+/**
+ * Convert an array into a string path ['a', 'b', 'c'] returns 'a.b.c'
+ * @param {array} arrayPath
+ */
 export function getStringPathForArray(arrayPath) {
   const inputType = getTypeString(arrayPath);
   if (inputType !== 'array') {
@@ -128,6 +166,12 @@ export function getStringPathForArray(arrayPath) {
   }, '');
 }
 
+/**
+ * If this subkey doesn't exist, initialize it to defaultValue
+ * @param {Object} object
+ * @param {string|array} path
+ * @param {*} defaultValue
+ */
 export function assurePathExists(object, path, defaultValue = {}) {
   const arrayPath = getObjectPath(path);
   let currentObject = object;
@@ -148,6 +192,10 @@ export function assurePathExists(object, path, defaultValue = {}) {
   return currentObject;
 }
 
+/**
+ * Return simplified type as a string. [] returns 'array' new Date() returns 'date'
+ * @param {*} data
+ */
 export function getTypeString(data) {
   if (typeof data === 'object') {
     if (data === null) return 'null';
