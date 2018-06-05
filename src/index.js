@@ -174,3 +174,19 @@ export function assurePathExists(object, path, defaultValue = {}) {
   }
   return currentObject;
 }
+
+export function getTypeString(data) {
+  if (typeof data === 'object') {
+    if (data === null) return 'null';
+    const stringified = toString.apply(data);
+    if (stringified.length > 2 && stringified[0] === '[' && stringified[stringified.length - 1] === ']') {
+      const splits = stringified.substr(1, stringified.length - 2).split(' ');
+      if (splits.length > 1) {
+        return splits.slice(1).join(' ').toLowerCase();
+      }
+    }
+    return 'unknown';
+  }
+
+  return typeof data;
+}

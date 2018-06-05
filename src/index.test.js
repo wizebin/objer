@@ -1,4 +1,4 @@
-import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists } from './index';
+import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString } from './index';
 import { expect } from 'chai';
 
 describe('object', () => {
@@ -70,6 +70,31 @@ describe('object', () => {
       const original = {};
       assurePathExists(original, 'a.b.c[1]', 'hello');
       expect(original).to.deep.equal({ a: { b: { c: [undefined, 'hello'] } } });
+    });
+  });
+  describe('getTypeString', () => {
+    it('returns correct type strings for basic types', () => {
+      expect(getTypeString('')).to.equal('string');
+      expect(getTypeString(1)).to.equal('number');
+      expect(getTypeString(1.5)).to.equal('number');
+      expect(getTypeString({})).to.equal('object');
+      expect(getTypeString([])).to.equal('array');
+      expect(getTypeString((() => {}))).to.equal('function');
+      expect(getTypeString(true)).to.equal('boolean');
+    });
+    it('returns correct type strings for complex types', () => {
+      expect(getTypeString(null)).to.equal('null');
+      expect(getTypeString(undefined)).to.equal('undefined');
+      expect(getTypeString(NaN)).to.equal('number');
+      expect(getTypeString(Infinity)).to.equal('number');
+      expect(getTypeString(new Date())).to.equal('date');
+      expect(getTypeString(/hello/g)).to.equal('regexp');
+      class test {}
+      expect(getTypeString(new test())).to.equal('object');
+      expect(getTypeString(Symbol(55))).to.equal('symbol');
+      expect(getTypeString(new Promise((() => {})))).to.equal('promise');
+      expect(getTypeString(new String(''))).to.equal('string');
+
     });
   });
 });
