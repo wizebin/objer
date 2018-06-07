@@ -191,3 +191,20 @@ string representing the type
     getTypeString(Symbol(55)); // returns 'symbol'
     getTypeString(new Promise((() => {}))); // returns 'promise'
     getTypeString(new String('')); // returns 'string'
+
+### deepEq(item1, item2)
+
+*parameters:*
+
+* `item1`: Anything
+* `item2`: Anything
+
+*response:*
+
+Checks for direct equality, and in the case of objects and arrays checks for subkey equality
+_note: does not handle class instance equality_
+
+*example:*
+
+    deepEq([{ first: 'bobabob', second: 'gogagog' }], [{ second: 'gogagog', first: 'bobabob' }]) // returns true
+    deepEq({ first: 1 }, { first: 2 }) // returns false

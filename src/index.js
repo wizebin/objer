@@ -197,7 +197,8 @@ export function assurePathExists(object, path, defaultValue = {}) {
  * @param {*} data
  */
 export function getTypeString(data) {
-  if (typeof data === 'object') {
+  const stringType = typeof data;
+  if (stringType === 'object') {
     if (data === null) return 'null';
     const stringified = toString.apply(data);
     if (stringified.length > 2 && stringified[0] === '[' && stringified[stringified.length - 1] === ']') {
@@ -209,11 +210,51 @@ export function getTypeString(data) {
     return 'unknown';
   }
 
-  return typeof data;
+  if (stringType === 'number') {
+    if (isNaN(data)) return 'nan';
+  }
+
+  return stringType;
+}
+
+/**
+ * Check if both parameters are equal, check all nested keys of objects and arrays
+ * @param {*} obja
+ * @param {*} objb
+ */
+export function deepEq(left, right) {
+  const leftType = getTypeString(left);
+  const rightType = getTypeString(right);
+
+  if (leftType !== rightType) return false;
+
+  if (leftType === 'nan') return true;
+
+  if (leftType === 'object') {
+    if (left === right) return true; // if they are the same thing, don't check children
+    const leftKeys = keys(left).sort(); // unsorted could be unequal
+    const rightKeys = keys(right).sort();
+    if (!deepEq(leftKeys, rightKeys)) return false;
+    for (let keydex = 0; keydex < leftKeys.length; keydex += 1) {
+      if (!deepEq(left[leftKeys[keydex]], right[leftKeys[keydex]])) return false;
+    }
+    return true;
+  }
+  if (leftType === 'array') {
+    if (left === right) return true; // if they are the same thing, don't check children
+    if (left.length !== right.length) return false;
+    for (let dex = 0; dex < left.length; dex += 1) {
+      if (!deepEq(left[dex], right[dex])) return false;
+    }
+    return true;
+  }
+
+  return left === right;
 }
 
 export default {
   assurePathExists,
+  deepEq,
   get,
   getObjectPath,
   getStringPathForArray,

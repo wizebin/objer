@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString } from './index';
+import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -95,7 +95,7 @@ describe('object', () => {
     it('returns correct type strings for complex types', () => {
       expect(getTypeString(null)).to.equal('null');
       expect(getTypeString(undefined)).to.equal('undefined');
-      expect(getTypeString(NaN)).to.equal('number');
+      expect(getTypeString(NaN)).to.equal('nan');
       expect(getTypeString(Infinity)).to.equal('number');
       expect(getTypeString(new Date())).to.equal('date');
       expect(getTypeString(/hello/g)).to.equal('regexp');
@@ -105,6 +105,47 @@ describe('object', () => {
       expect(getTypeString(new Promise((() => {})))).to.equal('promise');
       expect(getTypeString(new String(''))).to.equal('string');
 
+    });
+  });
+  describe('deepEq', () => {
+    it('Returns true for basic things that are equal', () => {
+      expect(deepEq(1, 1)).to.equal(true);
+      expect(deepEq('1', '1')).to.equal(true);
+      expect(deepEq([1], [1])).to.equal(true);
+      expect(deepEq({ first: 1 }, { first: 1 })).to.equal(true);
+      expect(deepEq(null, null)).to.equal(true);
+      expect(deepEq(NaN, NaN)).to.equal(true);
+      expect(deepEq(undefined, undefined)).to.equal(true);
+      const ownSymbol = Symbol(12);
+      expect(deepEq(ownSymbol, ownSymbol)).to.equal(true);
+      const item = { a: 123, b: 234 };
+      expect(deepEq(item, item)).to.equal(true);
+    });
+    it('Returns false for basic things that are not equal', () => {
+      expect(deepEq(1, 2)).to.equal(false);
+      expect(deepEq('1', '2')).to.equal(false);
+      expect(deepEq([1], [2])).to.equal(false);
+      expect(deepEq({ first: 1 }, { first: 2 })).to.equal(false);
+      expect(deepEq(null, 2)).to.equal(false);
+      expect(deepEq(NaN, 2)).to.equal(false);
+      expect(deepEq(undefined, 2)).to.equal(false);
+      expect(deepEq(Symbol(12), Symbol(12))).to.equal(false); // IMPORTANT!
+    });
+    it('Returns true for complex things that are equal', () => {
+      expect(deepEq([{ first: 'bobabob', second: 'gogagog' }], [{ second: 'gogagog', first: 'bobabob' }])).to.equal(true);
+      expect(deepEq([{ first: undefined, second: null }], [{ 'second': null, 'first': undefined }])).to.equal(true);
+      expect(deepEq([{ first: undefined, second: null }], [{ 'second': null, 'first': undefined }])).to.equal(true);
+    });
+    it('Detects differences in null types', () => {
+      expect(deepEq(null, undefined)).to.equal(false);
+      expect(deepEq(null, NaN)).to.equal(false);
+      expect(deepEq(undefined, NaN)).to.equal(false);
+      expect(deepEq(0, null)).to.equal(false);
+      expect(deepEq(0, undefined)).to.equal(false);
+      expect(deepEq(0, NaN)).to.equal(false);
+    });
+    it('Has predictable undefined subkey behavior', () => {
+      expect(deepEq({ a: 1, b: undefined }, { a: 1 })).to.equal(false);
     });
   });
 });
