@@ -307,7 +307,7 @@ export function shallowDiff(original, incoming, currentPath = []) {
       }
     }
     for (let dex = 0; dex < sharedLength; dex += 1) {
-      changes.push(shallowDiff(original[dex], incoming[dex], currentPath.concat(dex)));
+      changes = changes.concat(shallowDiff(original[dex], incoming[dex], currentPath.concat(dex)));
     }
   } else if (original === incoming) {
     return [];
