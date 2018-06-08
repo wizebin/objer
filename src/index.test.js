@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq } from './index';
+import { shallowDiff } from '.';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -81,6 +82,11 @@ describe('object', () => {
       assurePathExists(original, 'a.b.c[1]', 'hello');
       expect(original).to.deep.equal({ a: { b: { c: [undefined, 'hello'] } } });
     });
+    it('creates empty arrays at path', () => {
+      const original = {children: []};
+      assurePathExists(original, ['children'], []);
+      expect(original).to.deep.equal({ children: [] });
+    });
   });
   describe('getTypeString', () => {
     it('returns correct type strings for basic types', () => {
@@ -110,6 +116,8 @@ describe('object', () => {
   describe('deepEq', () => {
     it('Returns true for basic things that are equal', () => {
       expect(deepEq(1, 1)).to.equal(true);
+      expect(deepEq({}, {})).to.equal(true);
+      expect(deepEq([], [])).to.equal(true);
       expect(deepEq('1', '1')).to.equal(true);
       expect(deepEq([1], [1])).to.equal(true);
       expect(deepEq({ first: 1 }, { first: 1 })).to.equal(true);
@@ -146,6 +154,36 @@ describe('object', () => {
     });
     it('Has predictable undefined subkey behavior', () => {
       expect(deepEq({ a: 1, b: undefined }, { a: 1 })).to.equal(false);
+    });
+  });
+  describe('shallowDiff', () => {
+    it('Returns no difference for equal things', () => {
+      expect(shallowDiff(1, 1)).to.deep.equal([]);
+      expect(shallowDiff({ a: 1 }, { a: 1 })).to.deep.equal([]);
+      expect(shallowDiff({ }, { })).to.deep.equal([]);
+      expect(shallowDiff([], [])).to.deep.equal([]);
+    });
+    it('Returns type differences', () => {
+      expect(shallowDiff(1, 'b')).to.deep.equal([{ change: 'type', path: [], original: 1, incoming: 'b' }]);
+    });
+    it('Returns value differences', () => {
+      expect(shallowDiff(1, 2)).to.deep.equal([{ change: 'value', path: [], original: 1, incoming: 2 }]);
+    });
+    it('Returns added keys', () => {
+      expect(shallowDiff({ }, { a: 1 })).to.deep.equal([{ change: 'add', path: [], key: 'a', incoming: 1 }]);
+    });
+    it('Returns added keys', () => {
+      expect(shallowDiff({ a: 1 }, { })).to.deep.equal([{ change: 'delete', path: [], key: 'a', original: 1 }]);
+      expect(shallowDiff({ a: 1, hello: 'world' }, { })).to.deep.equal([{ change: 'delete', path: [], key: 'a', original: 1 }, { change: 'delete', path: [], key: 'hello', original: 'world' }]);
+    });
+    it('Returns growth', () => {
+      expect(shallowDiff([], [1])).to.deep.equal([{ change: 'grow', path: [], incoming: [1] }]);
+      expect(shallowDiff([], ['a', 'b', 'c'])).to.deep.equal([{ change: 'grow', path: [], incoming: ['a', 'b', 'c'] }]);
+      expect(shallowDiff([], [console.log, null, undefined, undefined])).to.deep.equal([{ change: 'grow', path: [], incoming: [console.log, null, undefined, undefined] }]);
+    });
+    it('Returns shrink', () => {
+      expect(shallowDiff([1], [])).to.deep.equal([{ change: 'shrink', path: [], original: [1] }]);
+      expect(shallowDiff([{}, 'a', 1, null], [])).to.deep.equal([{ change: 'shrink', path: [], original: [{}, 'a', 1, null] }]);
     });
   });
 });

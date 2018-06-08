@@ -252,6 +252,72 @@ export function deepEq(left, right) {
   return left === right;
 }
 
+/**
+ * Detect differences between two things, will indicate changes in type, value, length, etc. Will not diff string values.
+ * @param {*} original
+ * @param {*} incoming
+ */
+export function shallowDiff(original, incoming, currentPath = []) {
+  let changes = [];
+  const originalType = getTypeString(original);
+  const incomingType = getTypeString(incoming);
+
+  if (originalType !== incomingType) return [{ change: 'type', path: currentPath, original: original, incoming: incoming }];
+
+  if (originalType === 'nan') return [];
+
+  if (originalType === 'object') {
+    if (original === incoming) return []; // if they are the same thing, don't check children
+    let originalKeys = keys(original).sort(); // unsorted could be unequal
+    let incomingKeys = keys(incoming).sort();
+    let sharedKeys = [];
+    if (!deepEq(originalKeys, incomingKeys)) {
+      for (let originalDex = originalKeys.length - 1; originalDex >= 0; originalDex -= 1) {
+        const originalKey = originalKeys[originalDex];
+        for (let incomingDex = incomingKeys.length - 1; incomingDex >= 0; incomingDex -= 1) {
+          if (originalKey === incomingKeys[incomingDex]) {
+            sharedKeys.push(originalKey);
+            originalKeys.splice(originalDex, 1);
+            incomingKeys.splice(incomingDex, 1);
+            break;
+          }
+        }
+      }
+      for (let originalDex = 0; originalDex < originalKeys.length; originalDex += 1) {
+        changes.push({ change: 'delete', path: currentPath, key: originalKeys[originalDex], original: original[originalKeys[originalDex]] });
+      }
+      for (let incomingDex = 0; incomingDex < incomingKeys.length; incomingDex += 1) {
+        changes.push({ change: 'add', path: currentPath, key: incomingKeys[incomingDex], incoming: incoming[incomingKeys[incomingDex]] });
+      }
+    } else {
+      sharedKeys = originalKeys;
+    }
+    for (let keydex = 0; keydex < sharedKeys.length; keydex += 1) {
+      changes = changes.concat(shallowDiff(original[sharedKeys[keydex]], incoming[sharedKeys[keydex]], currentPath.concat(sharedKeys[keydex])));
+    }
+  } else if (originalType === 'array') {
+    if (original === incoming) return []; // if they are the same thing, don't check children
+    let sharedLength = original.length;
+    if (original.length !== incoming.length) {
+      if (original.length > incoming.length) {
+        sharedLength = incoming.length;
+        changes.push({ change: 'shrink', path: currentPath, original: original.slice(incoming.length) });
+      } else {
+        changes.push({ change: 'grow', path: currentPath, incoming: incoming.slice(original.length) });
+      }
+    }
+    for (let dex = 0; dex < sharedLength; dex += 1) {
+      changes.push(shallowDiff(original[dex], incoming[dex], currentPath.concat(dex)));
+    }
+  } else if (original === incoming) {
+    return [];
+  } else {
+    return [{ change: 'value', path: currentPath, original, incoming }]
+  }
+
+  return changes;
+}
+
 export default {
   assurePathExists,
   deepEq,

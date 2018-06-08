@@ -19,3 +19,5 @@ export function hasRoot(object: any, key: string | string[]): boolean;
 export function keys(object: any): string[];
 
 export function set(object: any, path: string, value: any): any;
+
+export function shallowDiff(original: any, incoming: any): any[];
