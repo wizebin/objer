@@ -11,7 +11,7 @@
  */
 export function set(object, path, value) {
   let subObject = object;
-  const keys = getObjectPath(path || '');
+  const keys = getObjectPath(path);
   for (let keydex = 0; keydex < keys.length; keydex += 1) {
     let key = keys[keydex];
     if (key !== '') {
@@ -50,11 +50,12 @@ export function keys(object) {
 /**
  * Check if an object has a value at a path
  * @param {Object} object
- * @param {string|array} key
+ * @param {string|array} path
  */
-export function has(object, key) {
+export function has(object, path) {
   let subObject = object;
-  const keys = getObjectPath(key || '');
+  const keys = getObjectPath(path);
+  if (keys.length === 0) return false;
   for (let keydex = 0; keydex < keys.length; keydex += 1) {
     let key = keys[keydex];
     if (!hasRoot(subObject, key)) return false;
@@ -84,7 +85,7 @@ export function hasRoot(object, key) {
  */
 export function get(object, path, defaultValue = undefined) {
   let subObject = object;
-  const keys = getObjectPath(path || '');
+  const keys = getObjectPath(path);
   for (let keydex = 0; keydex < keys.length; keydex += 1) {
     let key = keys[keydex];
     if (key !== '') {

@@ -1,6 +1,6 @@
 ## Description
 
-This package is used to interact with objects
+[This package](https://www.npmjs.com/package/objer) is used to interact with objects
 
 ## Basic Usage
 
