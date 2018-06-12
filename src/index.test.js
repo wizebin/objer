@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq } from './index';
 import { shallowDiff } from '.';
+import { keys } from '.';
+import { values } from '.';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -86,6 +88,28 @@ describe('object', () => {
       const original = {children: []};
       assurePathExists(original, ['children'], []);
       expect(original).to.deep.equal({ children: [] });
+    });
+  });
+  describe('keys', () => {
+    it('returns all object keys', () => {
+      expect(keys({ a: 1, b: 2, c: 3, fff: null })).to.deep.eq(['a', 'b', 'c', 'fff']);
+      expect(keys(null)).to.deep.eq([]);
+      expect(keys(1)).to.deep.eq([]);
+      expect(keys('hello')).to.deep.eq([]);
+    });
+  });
+  describe('values', () => {
+    it('returns all object values', () => {
+      expect(values({ a: 1, b: 2, c: 3, fff: null })).to.deep.eq([1, 2, 3, null]);
+    });
+    it('returns arrays', () => {
+      expect(values(['a', null, 123777, { f: 9 }])).to.deep.eq(['a', null, 123777, { f: 9 }]);
+      expect(values(new Array('a', null, 123777, { f: 9 }))).to.deep.eq(['a', null, 123777, { f: 9 }]);
+    });
+    it('returns empty array for anything that is not an array or an object', () => {
+      expect(values(null)).to.deep.eq([]);
+      expect(values(1)).to.deep.eq([]);
+      expect(values('hello')).to.deep.eq([]);
     });
   });
   describe('getTypeString', () => {

@@ -34,17 +34,39 @@ export function set(object, path, value) {
  * @param {Object} object
  */
 export function keys(object) {
-  if (!object) return [];
-  if (typeof Object.keys === 'undefined') return Object.keys(object);
-  const keys = [];
+  const stringType = getTypeString(object);
+  if (stringType === 'object') {
+    if (typeof Object.keys !== 'undefined') return Object.keys(object);
+    const keys = [];
 
-  for(let key in object) {
-    if (object.hasOwnProperty(key)) {
-      keys.push(key);
+    for(let key in object) {
+      if (object.hasOwnProperty(key)) {
+        keys.push(key);
+      }
     }
-  }
 
-  return keys;
+    return keys;
+  }
+  return [];
+}
+
+/**
+ * Get array of values in an object, passing an array will return the original array, anything else will return a blank array
+ * @param {Object} object
+ */
+export function values(object) {
+  const stringType = getTypeString(object);
+  if (stringType === 'object') {
+    const objectKeys = keys(object);
+    const result = [];
+    for (let keydex = 0; keydex < objectKeys.length; keydex += 1) {
+      result.push(object[objectKeys[keydex]]);
+    }
+    return result;
+  } else if (stringType === 'array') {
+    return object;
+  }
+  return [];
 }
 
 /**
