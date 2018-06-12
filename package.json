@@ -1,6 +1,6 @@
 {
   "name": "objer",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "Wizebin's object library",
   "main": "./dist/src/index.js",
   "typings": "./src/index.d.ts",
