@@ -127,6 +127,31 @@ array of keys
     keys(person); // returns ['name', 'address']
     keys(person.address); // returns ['street', 'city', 'state', 'zip']
 
+### values(object)
+
+*parameters:*
+
+* `object`: The object to get a list of values from
+
+*response:*
+
+array of values
+
+*example:*
+
+    const person = {
+        name: 'jeffery',
+        address: {
+            street: '123 fake st',
+            city: 'faketown',
+            state: 'FS',
+            zip: '90909',
+        }
+    };
+
+    values(person); // returns ['jeffery', { street: '123 fake st', city: 'faketown', state: 'FS', zip: '90909' }]
+    values(person.address); // returns ['123 fake st', 'faketown', 'FS', '90909']
+
 ### getObjectPath(path)
 
 *parameters:*
