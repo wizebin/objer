@@ -375,4 +375,5 @@ export default {
   hasRoot,
   keys,
   set,
+  yank,
 };
