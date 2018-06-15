@@ -1,8 +1,5 @@
 import { expect } from 'chai';
-import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq } from './index';
-import { shallowDiff } from '.';
-import { keys } from '.';
-import { values } from '.';
+import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -28,6 +25,20 @@ describe('object', () => {
       expect(get(tempObject, 'a.b.e[1]')).equal(2);
       expect(get(tempObject, 'a.b.e[5]')).equal(undefined);
       expect(get(tempObject, 'a.b.e[5]', 'test')).equal('test');
+      expect(get(tempObject, null, 'test')).equal(tempObject);
+    })
+  });
+  describe('yank', () => {
+    it('works exactly the same as get, but bad path inputs return default value instead of original object', () => {
+      const tempObject = { a: { b: { c: '123', e: [ 1, 2, 3 ] } } };
+      expect(yank(tempObject, 'a.b.c')).equal('123');
+      expect(yank(tempObject, 'a.b.e[1]')).equal(2);
+      expect(yank(tempObject, 'a.b.e[5]')).equal(undefined);
+      expect(yank(tempObject, 'a.b.e[5]', 'test')).equal('test');
+      expect(yank(tempObject, null, 'test')).equal('test');
+      expect(yank(tempObject, undefined, 'test')).equal('test');
+      expect(yank(tempObject, NaN, 'test')).equal('test');
+      expect(yank(tempObject, {}, 'test')).equal('test');
     })
   });
   describe('has', () => {

@@ -6,6 +6,8 @@ export function deepEq(left: any, right: any): boolean;
 
 export function get(object: any, path: string, defaultValue?: any): any;
 
+export function yank(object: any, path: string, defaultValue?: any): any;
+
 export function getObjectPath(path: string): string[];
 
 export function getStringPathForArray(arrayPath: string[]): string;

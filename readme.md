@@ -16,6 +16,8 @@
 
 ### get(object, path, defaultValue)
 
+**Important note, null path is treated abnormally, if you need something more traditional use yank**
+
 *parameters:*
 
 * `object`: The object to get a value from
@@ -43,6 +45,38 @@ The value at that key
     get(person, ['address', 'city']) // returns 'faketown'
     get(person, 'key.that.doesnot.exist') // returns undefined
     get(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
+    get(person, null, 'hola') // returns whole person object
+
+### yank(object, path, defaultValue)
+
+*parameters:*
+
+* `object`: The object to get a value from
+* `path`: The key path to pull the value from
+    * This can be a string 'a.b.c' or an array ['a', 'b', 'c'] or a number, if the path is any other type the default value will be returned
+* `defaultValue`: If there is no value at that location, (if that value comes out as `undefined`), get will return this value. If this value is not specified get will return undefined
+
+*response:*
+
+The value at that key
+
+*example:*
+
+    const person = {
+        name: 'jeffery',
+        address: {
+            street: '123 fake st',
+            city: 'faketown',
+            state: 'FS',
+            zip: '90909',
+        }
+    };
+
+    yank(person, 'address.city') // returns 'faketown'
+    yank(person, ['address', 'city']) // returns 'faketown'
+    yank(person, 'key.that.doesnot.exist') // returns undefined
+    yank(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
+    yank(person, null, 'hola') // returns 'hola'
 
 ### has(object, path)
 

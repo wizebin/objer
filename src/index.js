@@ -121,6 +121,29 @@ export function get(object, path, defaultValue = undefined) {
 }
 
 /**
+ * Retrieve subobject at path, if the key is null or undefined, the default value or undefined will be returned
+ * @param {Object} object
+ * @param {string|array} path
+ * @param {*} [defaultValue]
+ */
+export function yank(object, path, defaultValue = undefined) {
+  const stringType = getTypeString(path);
+  if (stringType !== 'string' && stringType !== 'array' && stringType !== 'number') return defaultValue;
+  let subObject = object;
+  const keys = getObjectPath(path);
+  for (let keydex = 0; keydex < keys.length; keydex += 1) {
+    let key = keys[keydex];
+    if (key !== '') {
+      if (!hasRoot(subObject, key)) return defaultValue;
+
+      subObject = subObject[key];
+    }
+  }
+
+  return subObject;
+}
+
+/**
  * Resolve a path to a path array 'a.b.c' returns ['a', 'b', 'c']
  * @param {string|array} path
  */
