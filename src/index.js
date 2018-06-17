@@ -35,7 +35,7 @@ export function set(object, path, value) {
  */
 export function keys(object) {
   const stringType = getTypeString(object);
-  if (stringType === 'object') {
+  if (stringType === 'object' || stringType === 'array') {
     if (typeof Object.keys !== 'undefined') return Object.keys(object);
     const keys = [];
 

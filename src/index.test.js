@@ -107,6 +107,17 @@ describe('object', () => {
       expect(keys(null)).to.deep.eq([]);
       expect(keys(1)).to.deep.eq([]);
       expect(keys('hello')).to.deep.eq([]);
+      expect(keys([1, 5, 9])).to.deep.eq(['0', '1', '2']);
+    });
+    it('works the same without Object.keys', () => {
+      const originalKeys = Object.keys;
+      Object.keys = undefined;
+      expect(keys({ a: 1, b: 2, c: 3, fff: null })).to.deep.eq(['a', 'b', 'c', 'fff']);
+      expect(keys(null)).to.deep.eq([]);
+      expect(keys(1)).to.deep.eq([]);
+      expect(keys('hello')).to.deep.eq([]);
+      expect(keys([1, 5, 9])).to.deep.eq(['0', '1', '2']);
+      Object.keys = originalKeys;
     });
   });
   describe('values', () => {

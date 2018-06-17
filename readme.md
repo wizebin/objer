@@ -140,7 +140,7 @@ The value at that key
 
 *parameters:*
 
-* `object`: The object to get a list of keys from
+* `object`: The object to get a list of keys from, passing an array returns an array of indexes with each index a string
 
 *response:*
 
