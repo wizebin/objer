@@ -16,7 +16,13 @@ describe('object', () => {
       const tempObject = {};
       set(tempObject, 'a.b.c[1]', 'hello');
       expect(tempObject.a.b.c[1]).equal('hello');
-    })
+    });
+    it('responds with value when the key equates to an empty path', () => {
+      const tempObject = {};
+      const result = set(tempObject, [], 'hello');
+      expect(tempObject).deep.equal({});
+      expect(result).equal('hello');
+    });
   });
   describe('get', () => {
     it('gets subobject from original object', () => {
