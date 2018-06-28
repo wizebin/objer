@@ -186,6 +186,33 @@ array of values
     values(person); // returns ['jeffery', { street: '123 fake st', city: 'faketown', state: 'FS', zip: '90909' }]
     values(person.address); // returns ['123 fake st', 'faketown', 'FS', '90909']
 
+### pick(object, whitelistedKeys)
+
+*parameters:*
+
+* `object`: The object to get a list of values from
+* `whitelistedKeys`: An array of keys to pick from the original object, can be deep values such as a.b.c.e[5]
+
+*response:*
+
+new object filled with matching `whitelistedKeys` keys from `object`
+
+*example:*
+
+    const person = {
+        name: 'jeffery',
+        address: {
+            street: '123 fake st',
+            city: 'faketown',
+            state: 'FS',
+            zip: '90909',
+        }
+    };
+
+    pick(person, ['address.street']); // returns { address: { street: '123 fake st' } }
+    pick(person, ['address.street', 'address.state']); // returns { address: { street: '123 fake st', state: 'FS' } }
+    pick(person, ['name']); // returns { name: 'jeffery' }
+
 ### getObjectPath(path)
 
 *parameters:*

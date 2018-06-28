@@ -52,6 +52,24 @@ export function keys(object) {
 }
 
 /**
+ * Create an object with selected keys and values from an input object
+ * @param {*} object
+ * @param {array} whitelistedKeys
+ */
+export function pick(object, whitelistedKeys) {
+  const result = {};
+  if (!whitelistedKeys) return result;
+  let key;
+  for (let keydex = 0; keydex < whitelistedKeys.length; keydex += 1) {
+    key = whitelistedKeys[keydex];
+    if (has(object, key)) {
+      set(result, key, get(object, key));
+    }
+  }
+  return result;
+}
+
+/**
  * Get array of values in an object, passing an array will return the original array, anything else will return a blank array
  * @param {Object} object
  */

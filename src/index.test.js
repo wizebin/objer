@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank } from './index';
+import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -32,6 +32,21 @@ describe('object', () => {
       expect(get(tempObject, 'a.b.e[5]')).equal(undefined);
       expect(get(tempObject, 'a.b.e[5]', 'test')).equal('test');
       expect(get(tempObject, null, 'test')).equal(tempObject);
+      expect(get(tempObject, null, 'test')).equal(tempObject);
+    })
+  });
+  describe('pick', () => {
+    it('picks subkeys from original object', () => {
+      expect(pick({ a: 1, b: 2, c: 3 }, ['a', 'c'])).deep.equal({ a: 1, c: 3 });
+      expect(pick({ a: 1, b: 2, c: 3 }, ['b'])).deep.equal({ b: 2 });
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, [['a', 'second']])).deep.equal({ a: { second: 2 } });
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, ['a'])).deep.equal({ a: { first: 1, second: 2, third: 3 }});
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, ['a.second'])).deep.equal({ a: { second: 2 } });
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, ['a.second', 'a.third'])).deep.equal({ a: { second: 2, third: 3 } });
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, ['q.tango'])).deep.equal({});
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, null)).deep.equal({});
+      expect(pick({ a: { first: 1, second: 2, third: 3 } }, [])).deep.equal({});
+      expect(pick({ a: ['hi', 'bye', 'hey'] }, ['a[1]'])).deep.equal({a: { '1': 'bye' }});
     })
   });
   describe('yank', () => {
