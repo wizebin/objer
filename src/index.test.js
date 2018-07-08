@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick } from './index';
+import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -47,6 +47,42 @@ describe('object', () => {
       expect(pick({ a: { first: 1, second: 2, third: 3 } }, null)).deep.equal({});
       expect(pick({ a: { first: 1, second: 2, third: 3 } }, [])).deep.equal({});
       expect(pick({ a: ['hi', 'bye', 'hey'] }, ['a[1]'])).deep.equal({a: { '1': 'bye' }});
+    })
+  });
+  describe('omit', () => {
+    it('omits subkeys from original object', () => {
+      expect(omit({ a: 1, b: 2, c: 3 }, ['a', 'c'])).deep.equal({ b: 2 });
+      expect(omit({ a: 1, b: 2, c: 3 }, ['b'])).deep.equal({ a: 1, c: 3 });
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, [['a', 'second']])).deep.equal({ a: { first: 1, third: 3 } });
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, ['a'])).deep.equal({});
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, ['a.second'])).deep.equal({ a: { first: 1, third: 3 } });
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, ['a.second', 'a.third'])).deep.equal({ a: { first: 1 } });
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, ['q.tango'])).deep.equal({ a: { first: 1, second: 2, third: 3 }});
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, null)).deep.equal({ a: { first: 1, second: 2, third: 3 }});
+      expect(omit({ a: { first: 1, second: 2, third: 3 } }, [])).deep.equal({ a: { first: 1, second: 2, third: 3 }});
+      expect(omit({ a: ['hi', 'bye', 'hey'] }, ['a[1]'])).deep.equal({a: ['hi', 'hey']});
+    })
+  });
+  describe('assassinate', () => {
+    it('assassinates subkeys from original object', () => {
+      expect(assassinate({ a: 1, b: 2, c: 3 }, ['c'])).deep.equal({ a: 1, b: 2 });
+    })
+  });
+  describe('clone', () => {
+    it('deeply clones objects and arrays', () => {
+      const original = { a: 1, b: 2, c: 3 };
+      const unoriginal = { a: 1, b: 2, c: 3 };
+      const secondary = original;
+      expect(original).to.equal(secondary);
+      expect(original).to.not.equal(unoriginal);
+
+      const cloned = clone(original);
+      expect(cloned).to.deep.equal(original);
+      expect(cloned).to.not.equal(original);
+
+      delete original['a'];
+
+      expect(original).to.not.deep.equal(cloned)
     })
   });
   describe('yank', () => {

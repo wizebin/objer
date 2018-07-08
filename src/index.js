@@ -69,6 +69,58 @@ export function pick(object, whitelistedKeys) {
   return result;
 }
 
+export function assassinate(source, path) {
+  const pathArray = getObjectPath(path);
+  if (pathArray.length > 0) {
+    const parentPath = pathArray.slice(0, pathArray.length - 1);
+    if (has(source, parentPath) || parentPath.length === 0) {
+      const original = get(source, parentPath);
+      const originalType = getTypeString(original);
+      const pathKey = pathArray[pathArray.length - 1];
+      if (originalType === 'object') {
+        delete original[pathKey];
+      } else if (originalType === 'array' && typeof pathKey === 'number') {
+        original.splice(pathKey, 1);
+      }
+    }
+  }
+  return source;
+}
+
+export function clone(source) {
+  const stringType = getTypeString(source);
+  if (stringType === 'object') {
+    const sourceKeys = keys(source);
+    const result = {};
+    for (let keydex = 0; keydex < sourceKeys.length; keydex += 1) {
+      result[sourceKeys[keydex]] = clone(source[sourceKeys[keydex]]);
+    }
+    return result;
+  } else if (stringType === 'array') {
+    const length = source.length;
+    const result = [];
+    for (let dex = 0; dex < length; dex += 1) {
+      result.push(clone(source[dex]));
+    }
+    return result;
+  }
+  return source;
+}
+
+/**
+ * Create an object without selected keys and values from an input object, DEEP CLONES OBJECT
+ * @param {*} object
+ * @param {array} whitelistedKeys
+ */
+export function omit(object, blacklistedKeys) {
+  if (!blacklistedKeys) return object;
+  const result = clone(object);
+  for (let keydex = 0; keydex < blacklistedKeys.length; keydex += 1) {
+    assassinate(result, blacklistedKeys[keydex]);
+  }
+  return result;
+}
+
 /**
  * Get array of values in an object, passing an array will return the original array, anything else will return a blank array
  * @param {Object} object
