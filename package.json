@@ -4,8 +4,6 @@
   "description": "Wizebin's object library",
   "main": "./dist/src/node.index.js",
   "server": "./dist/src/node.index.js",
-  "browser": "./dist/src/web.index.js",
-  "client": "./dist/src/web.index.js",
   "typings": "./src/index.d.ts",
   "scripts": {
     "test": "./node_modules/.bin/mocha --opts ./.mocharc",
