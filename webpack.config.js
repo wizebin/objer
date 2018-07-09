@@ -1,14 +1,49 @@
 const path = require('path')
 
-// TODO: multiple targets for testing? https://webpack.js.org/concepts/targets/#multiple-targets
-module.exports = {
+const serverConfig = {
   entry: './src/index.js',
   output: {
-    filename: 'index.js',
+    filename: 'node.index.js',
     path: path.resolve(__dirname, 'dist/src'),
     library: 'nexusdk',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
+  module: {
+    rules: [{
+      test: /\.js$/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    }]
+  },
   target: 'node',
-}
+};
+
+const clientConfig = {
+  entry: './src/index.js',
+  output: {
+    filename: 'web.index.js',
+    path: path.resolve(__dirname, 'dist/src'),
+    library: 'nexusdk',
+    libraryTarget: 'umd',
+    umdNamedDefine: true
+  },
+  module: {
+    rules: [{
+      test: /\.js$/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env']
+        }
+      }
+    }]
+  },
+  target: 'web',
+};
+
+module.exports = [ serverConfig, clientConfig ];

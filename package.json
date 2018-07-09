@@ -2,7 +2,10 @@
   "name": "objer",
   "version": "1.0.39",
   "description": "Wizebin's object library",
-  "main": "./dist/src/index.js",
+  "main": "./dist/src/node.index.js",
+  "server": "./dist/src/node.index.js",
+  "browser": "./dist/src/web.index.js",
+  "client": "./dist/src/web.index.js",
   "typings": "./src/index.d.ts",
   "scripts": {
     "test": "./node_modules/.bin/mocha --opts ./.mocharc",
@@ -25,14 +28,18 @@
     "url": "git+https://github.com/wizebin/objer.git"
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-beta.52",
+    "@babel/preset-env": "^7.0.0-beta.52",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
+    "babel-loader": "^8.0.0-beta.4",
+    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "chai": "^4.1.2",
-    "mocha": "^5.0.5",
-    "webpack": "^4.7.0",
-    "webpack-cli": "^2.1.3"
+    "mocha": "^5.2.0",
+    "webpack": "^4.15.1",
+    "webpack-cli": "^3.0.8"
   }
 }
