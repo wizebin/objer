@@ -78,7 +78,7 @@ The value at that key
     yank(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
     yank(person, null, 'hola') // returns 'hola'
 
-### first(object)
+### firstValue(object)
 
 *parameters:*
 
@@ -101,8 +101,8 @@ The first value in the object or array
         things: [5, 9, 0],
     };
 
-    first(person) // returns 'jeffery'
-    first(person.things) // returns 5
+    firstValue(person) // returns 'jeffery'
+    firstValue(person.things) // returns 5
 
 ### firstKey(object)
 

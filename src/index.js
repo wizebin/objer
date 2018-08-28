@@ -162,7 +162,7 @@ export function values(object) {
  * Get the first value in an object or array
  * @param {Object} object
  */
-export function first(object) {
+export function firstValue(object) {
   const stringType = getTypeString(object);
   if (stringType === 'object' || stringType === 'array') {
     return object[firstKey(object)];
