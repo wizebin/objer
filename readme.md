@@ -78,6 +78,58 @@ The value at that key
     yank(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
     yank(person, null, 'hola') // returns 'hola'
 
+### first(object)
+
+*parameters:*
+
+* `object`: The object or array to get a value from
+
+*response:*
+
+The first value in the object or array
+
+*example:*
+
+    const person = {
+        name: 'jeffery',
+        address: {
+            street: '123 fake st',
+            city: 'faketown',
+            state: 'FS',
+            zip: '90909',
+        },
+        things: [5, 9, 0],
+    };
+
+    first(person) // returns 'jeffery'
+    first(person.things) // returns 5
+
+### firstKey(object)
+
+*parameters:*
+
+* `object`: The object or array to get a key from
+
+*response:*
+
+The first key in the object or array
+
+*example:*
+
+    const person = {
+        name: 'jeffery',
+        address: {
+            street: '123 fake st',
+            city: 'faketown',
+            state: 'FS',
+            zip: '90909',
+        },
+        things: [5, 9, 0],
+    };
+
+    firstKey(person) // returns 'name'
+    firstKey(person.things) // returns 0
+
 ### has(object, path)
 
 *parameters:*

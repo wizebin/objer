@@ -52,6 +52,24 @@ export function keys(object) {
 }
 
 /**
+ * Get the first key in an object or array
+ * @param {Object} object
+ */
+export function firstKey(object) {
+  const stringType = getTypeString(object);
+  if (stringType === 'object') {
+    for(let key in object) {
+      if (object.hasOwnProperty(key)) {
+        return key;
+      }
+    }
+  } else if (stringType === 'array') {
+    if (object.length > 0) return 0;
+  }
+  return null;
+}
+
+/**
  * Create an object with selected keys and values from an input object
  * @param {*} object
  * @param {array} whitelistedKeys
@@ -138,6 +156,18 @@ export function values(object) {
     return object;
   }
   return [];
+}
+
+/**
+ * Get the first value in an object or array
+ * @param {Object} object
+ */
+export function first(object) {
+  const stringType = getTypeString(object);
+  if (stringType === 'object' || stringType === 'array') {
+    return object[firstKey(object)];
+  }
+  return undefined;
 }
 
 /**

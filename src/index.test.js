@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit } from './index';
+import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit, first } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -33,6 +33,17 @@ describe('object', () => {
       expect(get(tempObject, 'a.b.e[5]', 'test')).equal('test');
       expect(get(tempObject, null, 'test')).equal(tempObject);
       expect(get(tempObject, null, 'test')).equal(tempObject);
+    })
+  });
+  describe('first', () => {
+    it('returns first thing in an object or array', () => {
+      const tempObject = { a: 9, b: 12 };
+      const tempArray = ['bobby', 'jimbo'];
+      expect(first(tempObject)).equal(9);
+      expect(first(tempArray)).equal('bobby');
+      expect(first(null)).equal(undefined);
+      expect(first([])).equal(undefined);
+      expect(first({})).equal(undefined);
     })
   });
   describe('pick', () => {
