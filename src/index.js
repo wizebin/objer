@@ -70,6 +70,50 @@ export function firstKey(object) {
 }
 
 /**
+ * Get the first value in an object or array
+ * @param {Object} object
+ */
+export function firstValue(object) {
+  const stringType = getTypeString(object);
+  if (stringType === 'object' || stringType === 'array') {
+    return object[firstKey(object)];
+  }
+  return undefined;
+}
+
+/**
+ * Get the last key in an object or array
+ * @param {Object} object
+ */
+export function lastKey(object) {
+  const stringType = getTypeString(object);
+  if (stringType === 'object') {
+    let retkey = null;
+    for(let key in object) {
+      if (object.hasOwnProperty(key)) {
+        retkey = key;
+      }
+    }
+    return retkey;
+  } else if (stringType === 'array') {
+    if (object.length > 0) return object.length - 1;
+  }
+  return null;
+}
+
+/**
+ * Get the last value in an object or array
+ * @param {Object} object
+ */
+export function lastValue(object) {
+  const stringType = getTypeString(object);
+  if (stringType === 'object' || stringType === 'array') {
+    return object[lastKey(object)];
+  }
+  return undefined;
+}
+
+/**
  * Create an object with selected keys and values from an input object
  * @param {*} object
  * @param {array} whitelistedKeys
@@ -156,18 +200,6 @@ export function values(object) {
     return object;
   }
   return [];
-}
-
-/**
- * Get the first value in an object or array
- * @param {Object} object
- */
-export function firstValue(object) {
-  const stringType = getTypeString(object);
-  if (stringType === 'object' || stringType === 'array') {
-    return object[firstKey(object)];
-  }
-  return undefined;
 }
 
 /**
@@ -465,9 +497,59 @@ export function shallowDiff(original, incoming, currentPath = []) {
   return changes;
 }
 
+export function subAssign(destinationObject, subPath, source) {
+  const originalType = getTypeString(destinationObject);
+  if (!destinationObject || (originalType !== 'object' && originalType !== 'array')) {
+    throw new TypeError('Cannot execute subAssign on a non-object or array');
+  }
+  assurePathExists(destinationObject, subPath, {});
+  set(destinationObject, subPath, Object.assign(get(destinationObject, subPath, {}), source));
+  return destinationObject;
+}
+
+// usage: partition([1,2,3,4], { a: item => (item % 2 == 0), b: item => (item === 3) }, 'other') ====>>>> { a: [2,4], b: [3], other: [1]}
+/**
+ * separate an array into separate arrays, by a partitioning function
+ * @param {array} list 
+ * @param {function} conditionFunctionObject 
+ * @param {string} defaultKey 
+ */
+export function partition(list, conditionFunctionObject, defaultKey) {
+  const conditionKeys = keys(conditionFunctionObject);
+  const result = defaultKey ? { [defaultKey]: [] } : {};
+
+  for(let key = 0; key < conditionKeys.length; key += 1) {
+    result[conditionKeys[key]] = [];
+  }
+
+  for(let dex = 0; dex < list.length; dex += 1) {
+    const item = list[dex];
+    let included = false;
+
+    for(let key = 0; key < conditionKeys.length; key += 1) {
+      const keyValue = conditionKeys[key];
+      const pass = conditionFunctionObject[keyValue](item, dex, list);
+      if (pass) {
+        result[keyValue].push(item);
+        included = true;
+      }
+    }
+
+    if (defaultKey && !included) {
+      result[defaultKey].push(item);
+    }
+  }
+
+  return result;
+}
+
 export default {
+  assassinate,
   assurePathExists,
+  clone,
   deepEq,
+  firstKey,
+  firstValue,
   get,
   getObjectPath,
   getStringPathForArray,
@@ -475,6 +557,14 @@ export default {
   has,
   hasRoot,
   keys,
+  lastKey,
+  lastValue,
+  omit,
+  partition,
+  pick,
   set,
+  shallowDiff,
+  subAssign,
+  values,
   yank,
 };

@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit, firstValue } from './index';
+import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit, firstValue, subAssign, partition } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -298,6 +298,29 @@ describe('object', () => {
     it('Returns shrink', () => {
       expect(shallowDiff([1], [])).to.deep.equal([{ change: 'shrink', path: [], original: [1] }]);
       expect(shallowDiff([{}, 'a', 1, null], [])).to.deep.equal([{ change: 'shrink', path: [], original: [{}, 'a', 1, null] }]);
+    });
+  });
+  describe('subAssign', () => {
+    it('Applies an object to a subobject', () => {
+      const original = { a: { b: 1 } };
+      const result = subAssign(clone(original), 'a', { c: 3 });
+      expect(result).to.deep.equal({ a: { b: 1, c: 3 } });
+
+      const originalArray = [null, null, { d: 9, q: { g: { u: 99 } } }]
+      const arrayResult = subAssign(clone(originalArray), [2, 'q', 'g'], { f: 11 });
+      expect(arrayResult).to.deep.equal([null, null, { d: 9, q: { g: { u: 99, f: 11 } } }]);
+    });
+    it('Fails gracefully', () => {
+      expect(() => subAssign(null, 'a', { c: 3 })).to.throw(TypeError);
+      expect(() => subAssign('bobby', 'a', { c: 3 })).to.throw(TypeError);
+      expect(() => subAssign(99, 'a.b.c.d.e.f', 'something')).to.throw(TypeError);
+    });
+  });
+  describe('partition', () => {
+    it('Partitions basic arrays', () => {
+      expect(partition([1,2,3,4], { a: item => (item % 2 === 0), b: item => (item === 3) }, 'other')).to.deep.equal({ a: [2,4], b: [3], other: [1]});
+      expect(partition([5, 5, 5, 5], { even: item => (item % 2 === 0), odd: item => (item % 2 === 1) }, 'other')).to.deep.equal({ even: [], odd: [5, 5, 5, 5], other: []});
+      expect(partition([1, 2, 3, 4, 5, 6], { even: item => item % 2 === 0 }, 'odd')).to.deep.equal({ even: [2, 4, 6], odd: [1, 3, 5] });
     });
   });
 });

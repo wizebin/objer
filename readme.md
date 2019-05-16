@@ -41,11 +41,11 @@ The value at that key
         }
     };
 
-    get(person, 'address.city') // returns 'faketown'
-    get(person, ['address', 'city']) // returns 'faketown'
-    get(person, 'key.that.doesnot.exist') // returns undefined
-    get(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
-    get(person, null, 'hola') // returns whole person object
+    get(person, 'address.city'); // returns 'faketown'
+    get(person, ['address', 'city']); // returns 'faketown'
+    get(person, 'key.that.doesnot.exist'); // returns undefined
+    get(person, 'key.that.doesnot.exist', 'hola'); // returns 'hola'
+    get(person, null, 'hola'); // returns whole person object
 
 ### yank(object, path, defaultValue)
 
@@ -72,11 +72,11 @@ The value at that key
         }
     };
 
-    yank(person, 'address.city') // returns 'faketown'
-    yank(person, ['address', 'city']) // returns 'faketown'
-    yank(person, 'key.that.doesnot.exist') // returns undefined
-    yank(person, 'key.that.doesnot.exist', 'hola') // returns 'hola'
-    yank(person, null, 'hola') // returns 'hola'
+    yank(person, 'address.city'); // returns 'faketown'
+    yank(person, ['address', 'city']); // returns 'faketown'
+    yank(person, 'key.that.doesnot.exist'); // returns undefined
+    yank(person, 'key.that.doesnot.exist', 'hola'); // returns 'hola'
+    yank(person, null, 'hola'); // returns 'hola'
 
 ### firstValue(object)
 
@@ -101,8 +101,8 @@ The first value in the object or array
         things: [5, 9, 0],
     };
 
-    firstValue(person) // returns 'jeffery'
-    firstValue(person.things) // returns 5
+    firstValue(person); // returns 'jeffery'
+    firstValue(person.things); // returns 5
 
 ### firstKey(object)
 
@@ -127,8 +127,8 @@ The first key in the object or array
         things: [5, 9, 0],
     };
 
-    firstKey(person) // returns 'name'
-    firstKey(person.things) // returns 0
+    firstKey(person); // returns 'name'
+    firstKey(person.things); // returns 0
 
 ### has(object, path)
 
@@ -154,11 +154,11 @@ The first key in the object or array
         }
     };
 
-    has(person, 'address') // returns true
-    has(person, 'address.city') // returns true
-    has(person, ['address', 'city']) // returns true
-    has(person, 'key.that.doesnot.exist') // returns false
-    has(person, 'key.that.really.doesnot.exist') // returns false
+    has(person, 'address'); // returns true
+    has(person, 'address.city'); // returns true
+    has(person, ['address', 'city']); // returns true
+    has(person, 'key.that.doesnot.exist'); // returns false
+    has(person, 'key.that.really.doesnot.exist'); // returns false
 
 ### set(object, path, value)
 
@@ -344,5 +344,24 @@ _note: does not handle class instance equality_
 
 *example:*
 
-    deepEq([{ first: 'bobabob', second: 'gogagog' }], [{ second: 'gogagog', first: 'bobabob' }]) // returns true
-    deepEq({ first: 1 }, { first: 2 }) // returns false
+    deepEq([{ first: 'bobabob', second: 'gogagog' }], [{ second: 'gogagog', first: 'bobabob' }]); // returns true
+    deepEq({ first: 1 }, { first: 2 }); // returns false
+
+
+### partition(list, paritionFunctionObject, defaultKey)
+
+*parameters:*
+
+* `list`: Original list to partition, array
+* `partitionFunctionObject`: Takes an object where the key is the partition key, and the value is a function that returns a boolean indicating whether or not a given line item passed the condition to be added to that partition
+* `defaultKey`: If the list item does not pass any of the partitionFunctionObject function tests, it will be assigned to the default key, if the default key is null the line item is ignored
+
+*response:*
+
+An object that contains the same keys the partitionFunctionObject + the default key, the values are the list of line items that passed the conditions in the partition functions
+
+*example:*
+
+    const original = [1, 2, 3, 4, 5];
+
+    partition(original, { even: item => item % 2 === 0 }, 'odd'); // returns { even: [2, 4], odd: [1, 3, 5] }

@@ -5,7 +5,7 @@ const serverConfig = {
   output: {
     filename: 'node.index.js',
     path: path.resolve(__dirname, 'dist/src'),
-    library: 'nexusdk',
+    library: 'objer',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
@@ -28,7 +28,7 @@ const clientConfig = {
   output: {
     filename: 'web.index.js',
     path: path.resolve(__dirname, 'dist/src'),
-    library: 'nexusdk',
+    library: 'objer',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
