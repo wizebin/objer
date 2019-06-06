@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit, firstValue, subAssign, partition } from './index';
+import { assassinate, clone, has, get, getObjectPath, set, getStringPathForArray, assurePathExists, getTypeString, deepEq, shallowDiff, keys, values, yank, pick, omit, firstValue, subAssign, partition, mapObject } from './index';
 
 describe('object', () => {
   describe('getObjectPath', () => {
@@ -321,6 +321,12 @@ describe('object', () => {
       expect(partition([1,2,3,4], { a: item => (item % 2 === 0), b: item => (item === 3) }, 'other')).to.deep.equal({ a: [2,4], b: [3], other: [1]});
       expect(partition([5, 5, 5, 5], { even: item => (item % 2 === 0), odd: item => (item % 2 === 1) }, 'other')).to.deep.equal({ even: [], odd: [5, 5, 5, 5], other: []});
       expect(partition([1, 2, 3, 4, 5, 6], { even: item => item % 2 === 0 }, 'odd')).to.deep.equal({ even: [2, 4, 6], odd: [1, 3, 5] });
+    });
+  });
+  describe('mapObject', () => {
+    it('Modifies object values', () => {
+      expect(mapObject({ a: 1, b: 2, c: 3 }, item => item + 3)).to.deep.equal({ a: 4, b: 5, c: 6 });
+      expect(mapObject({ first: '1', second: '2' }, (item, key) => item + key )).to.deep.equal({ first: '1first', second: '2second' });
     });
   });
 });

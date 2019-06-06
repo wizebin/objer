@@ -4,6 +4,8 @@ interface FunctionObject {
     [key: string]:  (item: any) => boolean,
 }
 
+function MapFunction(value: any, key: string, index: number): any;
+
 export function assassinate(source: any, path: (string | string[])): any;
 export function assurePathExists(object: any, path: (string | string[]), defaultValue: any): boolean;
 export function clone(source): any;
@@ -19,6 +21,7 @@ export function hasRoot(object: any, key: string | string[]): boolean;
 export function keys(object: any): string[];
 export function lastKey(object: Object): string;
 export function lastValue(object: Object): any;
+export function mapObject(object: Object, callback: MapFunction): any;
 export function omit(object, blacklistedKeys): any;
 export function partition(list: Array, conditionFunctionObject: FunctionObject, defaultKey: string)
 export function pick(object: any, whitelistedKeys: (string | string[])[]): any;

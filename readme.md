@@ -365,3 +365,22 @@ An object that contains the same keys the partitionFunctionObject + the default 
     const original = [1, 2, 3, 4, 5];
 
     partition(original, { even: item => item % 2 === 0 }, 'odd'); // returns { even: [2, 4], odd: [1, 3, 5] }
+
+
+### mapObject(object, modificationFunction)
+
+*parameters:*
+
+* `object`: Original object to modify
+* `modificationFunction`: Function to execute on every value of object, the results of this function will be assigned as the new value of the resultant object for the original key
+    * (value, key, keyIndex) => any
+
+*response:*
+
+A new object with all the same keys as the original object with every value the result of the modification function
+
+*example:*
+
+    const original = { a: 1, b: 2, c: 3 };
+
+    mapObject(original, item => item + 3); // returns { a: 4, b: 5, c: 6 }

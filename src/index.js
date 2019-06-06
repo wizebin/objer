@@ -543,6 +543,13 @@ export function partition(list, conditionFunctionObject, defaultKey) {
   return result;
 }
 
+export function mapObject(object, callback) {
+  return keys(object).reduce((result, key, dex) => {
+    result[key] = callback(object[key], key, dex);
+    return result;
+  }, {});
+}
+
 export default {
   assassinate,
   assurePathExists,
@@ -559,6 +566,7 @@ export default {
   keys,
   lastKey,
   lastValue,
+  mapObject,
   omit,
   partition,
   pick,
